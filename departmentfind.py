@@ -1,0 +1,65 @@
+import tkinter
+import pymysql
+from tkinter import*
+from tkinter import ttk
+def departmentfind() :
+    t=tkinter.Tk()
+    t.geometry('1300x750')
+    d=Canvas(t,height=1500,width=1500,bg='yellow')
+    d.place(x=0,y=0)
+    head=Label(t,text='Department Find',font=('arial',30,"italic underline"),fg='black',bg='sky blue')
+    head.place(x=450,y=10)
+    def filldata() :
+        db=pymysql.connect(host='localhost',user='root',password='root',database='epcs')
+        cur=db.cursor()
+        lt=[]
+        sql="select deptid from department"
+        cur.execute(sql)
+        data=cur.fetchall()
+        for res in data:
+            lt.append(res[0])
+        e1['values']=lt
+    def findata() :
+        db=pymysql.connect(host='localhost',user='root',password='root',database='epcs')
+        cur=db.cursor()
+        xa=int(e1.get())
+        sql="select dname,hodname,hodemailid,specailremarks from department where deptid=%d" %(xa)
+        cur.execute(sql)
+        data=cur.fetchone()
+        e2.delete(0,100)
+        e3.delete(0,100)
+        e4.delete(0,100)
+        e5.delete(0,100)
+        e2.insert(0,str(data[0]))
+        e3.insert(0,str(data[1]))
+        e4.insert(0,str(data[2]))
+        e5.insert(0,data[3])
+        db.close()
+    def close() :
+        t.destroy()
+    a=Label(t,text='Dep-Id',font=('georgia',20,"italic underline"),fg='black',bg='sky blue')
+    a.place(x=380,y=120)
+    e1=ttk.Combobox(t) 
+    filldata()
+    e1.place(x=550,y=130)
+    b1=Button(t,text='Find',font=('georgia',25,"italic underline"),fg='black',bg='sky blue',width=9,command=findata)
+    b1.place(x=750,y=115)
+    b=Label(t,text='DName',font=('georgia',20,"italic underline"),fg='black',bg='sky blue')
+    b.place(x=375,y=220)
+    e2=Entry(t,width=20,bd=15)
+    e2.place(x=550,y=220)
+    c=Label(t,text='Hadname',font=('georgia',20,"italic underline"),fg='black',bg='sky blue')
+    c.place(x=350,y=320)
+    e3=Entry(t,width=20,bd=15)
+    e3.place(x=550,y=320)
+    d=Label(t,text='Hademail-Id',font=('georgia',20,"italic underline"),fg='black',bg='sky blue')
+    d.place(x=315,y=420)
+    e4=Entry(t,width=20,bd=15)
+    e4.place(x=550,y=420)
+    x=Label(t,text='Special Remarks',font=('georgia',20,"italic underline"),fg='black',bg='sky blue')
+    x.place(x=275,y=520)
+    e5=Entry(t,width=20,bd=15)
+    e5.place(x=550,y=520)
+    b2=Button(t,text='Close',font=('georgia',25,"italic underline"),fg='black',bg='sky blue',width=9,command=close)
+    b2.place(x=750,y=500)
+    t.mainloop()
